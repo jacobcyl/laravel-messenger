@@ -1,8 +1,7 @@
 <?php
 
-namespace Cmgmyr\Messenger\Models;
+namespace Jacobcyl\Messenger\Models;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -30,17 +29,7 @@ class Participant extends Eloquent
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at', 'last_read'];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct(array $attributes = [])
-    {
-        $this->table = Models::table('participants');
-
-        parent::__construct($attributes);
-    }
-
+    
     /**
      * Thread relationship.
      *
@@ -48,7 +37,7 @@ class Participant extends Eloquent
      */
     public function thread()
     {
-        return $this->belongsTo(Models::classname(Thread::class), 'thread_id', 'id');
+        return $this->belongsTo('Jacobcyl\Messenger\Thread', 'thread_id', 'id');
     }
 
     /**
@@ -58,6 +47,13 @@ class Participant extends Eloquent
      */
     public function user()
     {
-        return $this->belongsTo(Models::classname(User::class), 'user_id');
+        return $this->belongsTo(config('user_model', 'App\Models\User'), 'user_id');
+    }
+    
+    public function scopeOfUser($query, $userId = null){
+        if( empty($userId) )
+            return false;
+        
+        return $query->where('user_id', $userId);
     }
 }

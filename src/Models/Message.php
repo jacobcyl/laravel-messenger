@@ -1,8 +1,7 @@
 <?php
 
-namespace Cmgmyr\Messenger\Models;
+namespace Jacobcyl\Messenger\Models;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Message extends Eloquent
@@ -38,23 +37,13 @@ class Message extends Eloquent
     ];
 
     /**
-     * {@inheritDoc}
-     */
-    public function __construct(array $attributes = [])
-    {
-        $this->table = Models::table('messages');
-
-        parent::__construct($attributes);
-    }
-
-    /**
      * Thread relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function thread()
     {
-        return $this->belongsTo(Models::classname(Thread::class), 'thread_id', 'id');
+        return $this->belongsTo('Jacobcyl\Messenger\Models\Thread', 'thread_id', 'id');
     }
 
     /**
@@ -64,8 +53,9 @@ class Message extends Eloquent
      */
     public function user()
     {
-        return $this->belongsTo(Models::classname(User::class), 'user_id');
+        return $this->belongsTo(config('user_model', 'App\Models\User'), 'user_id');
     }
+
 
     /**
      * Participants relationship.
@@ -74,7 +64,7 @@ class Message extends Eloquent
      */
     public function participants()
     {
-        return $this->hasMany(Models::classname(Participant::class), 'thread_id', 'thread_id');
+        return $this->hasMany('Jacobcyl\Messenger\Participant', 'thread_id', 'thread_id');
     }
 
     /**

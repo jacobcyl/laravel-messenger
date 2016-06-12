@@ -1,6 +1,5 @@
 <?php
 
-use Cmgmyr\Messenger\Models\Models;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -13,12 +12,16 @@ class CreateMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create(Models::table('messages'), function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('thread_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->text('body');
+            $table->string('link', 100)->nullalbe()->comment("url linked to detail page");
             $table->timestamps();
+
+            $table->foreign('thread_id')->references('id')->on('threads')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -29,6 +32,6 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::drop(Models::table('messages'));
+        Schema::drop('messages');
     }
 }
