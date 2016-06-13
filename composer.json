@@ -17,6 +17,11 @@
             "role": "Co-Developer"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Jacobcyl\\Messenger\\": "src/"
+        }
+    },
     "require": {
         "php": ">=5.4.0",
         "illuminate/config": "~5.0",
