@@ -3,9 +3,17 @@
 namespace Jacobcyl\Messenger;
 
 use Illuminate\Support\ServiceProvider;
+use Jacobcyl\Messenger\Messenger;
 
 class MessengerServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
     /**
      * Bootstrap the application services.
      *
@@ -32,5 +40,14 @@ class MessengerServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/config/config.php', 'messenger'
         );
+
+        $this->app->singleton('messenger', function($app){
+            return new Messenger();
+        });
+    }
+
+    public function provides()
+    {
+        return ['messenger'];
     }
 }

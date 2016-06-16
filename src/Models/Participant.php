@@ -47,7 +47,7 @@ class Participant extends Eloquent
      */
     public function user()
     {
-        return $this->belongsTo(config('user_model', 'App\Models\User'), 'user_id');
+        return $this->belongsTo(config('messenger.user_model', 'App\Models\User'), 'user_id');
     }
     
     public function scopeOfUser($query, $userId = null){

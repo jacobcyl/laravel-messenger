@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jacobcyl\Messenger\Exceptions\IncorrectUsageException;
 
@@ -84,7 +85,7 @@ class Thread extends Eloquent
      */
     public function participantUsers($userId = null){
 
-        $users = $this->belongsToMany(config('user_model', 'App\Models\User'), 'participants', 'thread_id', 'user_id');
+        $users = $this->belongsToMany(config('messenger.user_model', 'App\Models\User'), 'participants', 'thread_id', 'user_id');
 
         if( !empty($userId) ){
             $users = $users->wherePivot('user_id', $userId);
@@ -196,17 +197,26 @@ class Thread extends Eloquent
      *
      * @param array $participants list of all participants
      */
-    public function addParticipants(array $participants)
+    public function addParticipants($participants)
     {
-        if (count($participants)) {
+        if (is_array($participants) && count($participants)) {
+            $all = [];
             foreach ($participants as $user_id) {
-                Participant::firstOrCreate([
+                $participant = [
                     'user_id' => $user_id,
                     'thread_id' => $this->id,
-                ]);
+                ];
+                $all[] = $participant;
             }
+            DB::table('participants')->insert($all);
+        } else if(!empty($participants)) {
+            Participant::firstOrCreate([
+                'user_id' => $participants,
+                'thread_id' => $this->id,
+            ]);
         }
     }
+
 
     /**
      * Mark a thread as read for a user.
