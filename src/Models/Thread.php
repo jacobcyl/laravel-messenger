@@ -26,7 +26,7 @@ class Thread extends Eloquent
      *
      * @var array
      */
-    protected $fillable = ['subject', 'to_all'];
+    protected $fillable = ['subject', 'to_all', 'cate'];
 
     /**
      * The attributes that should be mutated to dates.

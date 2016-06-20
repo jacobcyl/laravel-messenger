@@ -25,6 +25,7 @@ class Messenger
         'body' => '',
         'link' => null,
         'links' => null,
+        'cate' => 'Msg',
         'senderId' => '',
         'createdAt' => '',
         'store' => 1
@@ -69,16 +70,17 @@ class Messenger
         }
     }
 
-    private function createMessage(){
+    private function createMessage(array $message){
         $thread = Thread::create([
-            'subject'   => $this->message['subject'],
+            'subject'   => $message['subject'],
+            'cate'      => isset($message['cate']) ? $message['cate'] : 'Msg',
             'to_all'    => $this->toAll ? 1 : 0 ,
         ]);
 
         Message::create([
             'thread_id' => $thread->id,
-            'user_id'   => $this->message['senderId'],
-            'body'      => $this->message['body']
+            'user_id'   => $message['senderId'],
+            'body'      => $message['body']
         ]);
 
         // participants
@@ -109,6 +111,7 @@ class Messenger
             'body' => '',
             'link' => '',
             'links' => '',
+            'cate' => '',
             'senderId' => '',
             'createdAt' => Carbon::now(),
             'store' => ''
@@ -126,7 +129,7 @@ class Messenger
 
         //self::sendMsg($this->toUserIds, $this->message, $this->toAll, $this->isSave, $this->isNotify);
         if($this->isStore){
-            self::createMessage();
+            self::createMessage($params);
         }
 
         if($this->isNotify){
@@ -206,6 +209,7 @@ class Messenger
             'body' => 'body',
             'link' => 'link',
             'links' => 'links',
+            'cate' => 'cate',
             'sender' => 'senderId',
             'url' => 'link',
         ];
