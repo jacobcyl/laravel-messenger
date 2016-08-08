@@ -80,7 +80,8 @@ class Messenger
         Message::create([
             'thread_id' => $thread->id,
             'user_id'   => $message['senderId'],
-            'body'      => $message['body']
+            'body'      => $message['body'],
+            'link'      => $message['link']
         ]);
 
         // participants
